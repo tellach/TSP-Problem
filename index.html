@@ -44,7 +44,7 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-md-4">
-                <button class="btn btn-block btn-lg btn-outline-light" onclick="tarjan();" id="articulation">Voir les points
+                <button class="btn btn-block btn-lg btn-outline-light" onclick="test();" id="articulation">Voir les points
                     d'articulation</button>
             </div>
         </div>
@@ -64,7 +64,9 @@
 </body>
 
 </html>
+<script type="text/javascript" src="pvc.js"></script>
 <script>
+
     var network = null;
     var nodes = new vis.DataSet([{
         id: 0,
@@ -305,13 +307,14 @@
         //     i++;
         // });
 
-        console.log("Articulation points in first graph")
+       /* console.log("Articulation points in first graph")
         g1 = new Graph(nodes.length)
         edges.forEach(element => {
             g1.addEdge(element.from, element.to)
 
         })
         console.log(g1.adj);
-        g1.AP()
+        g1.AP()*/
+
     }
 </script>
