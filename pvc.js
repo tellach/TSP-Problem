@@ -1,5 +1,4 @@
-const V = 4
-function pvc(graph, s) {
+function pvc(graph, s,V) {
     //store all vertex apart from source vertex 
     vertex = []
 
@@ -7,26 +6,40 @@ function pvc(graph, s) {
         if (i != s) vertex.push(i)
     }
 
-
-
     min_path = Number.MAX_VALUE;
-
+    var save1= [];
+    var oldMinPath=min_path;
     while (true) {
+        
         current_pathweight = 0;
         k = s;
-
         for (var i = 0; i < vertex.length; i++) {
             current_pathweight += graph[k][vertex[i]]
             k = vertex[i]
         }
 
         current_pathweight += graph[k][s]
-        min_path = Math.min(min_path, current_pathweight)
 
-        if (!next_permutation(vertex)) break;
+        oldMinPath=min_path;
+        min_path = Math.min(min_path,current_pathweight)
+
+        console.log(oldMinPath,"||||",min_path)
+        
+
+        if(min_path<oldMinPath) {
+            save1 = [...vertex];
+        }
+        
+
+        if (!next_permutation(vertex)) break; 
     }
+    var result = {
+                    "min_path":min_path,
+                    "nodes":save1
 
-    return min_path;
+                 }
+
+    return result;
 
 
 }
@@ -43,7 +56,9 @@ function next_permutation(L) {
     }
 
 
-    if (i == -1) return false
+    if (i == -1){
+        return false
+    } 
 
     j = i + 1
     while ((j < n) && (L[j] > L[i])) {
@@ -70,10 +85,8 @@ function next_permutation(L) {
 
 }
 
-function test() {
-    graph = [[0, 10, 15, 20], [10, 0, 35, 25],
-    [15, 35, 0, 30], [20, 25, 30, 0]]
+function test(V,graph) {
     s = 0    
-    console.log(pvc(graph, s))
+    return pvc(graph, s,V)
 }
 

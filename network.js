@@ -197,7 +197,6 @@ class Graph {
                 this.APUtil(i, visited, disc, low, parent, ap);
         }
 
-
         for (var j = 0; j < this.v; j++) {
             data.nodes.update({ id: j, color: { background: '#349feb' } })
 
@@ -211,16 +210,70 @@ class Graph {
     }
 }
 
-function tarjan() {
+function tsp() {
     var edges = data.edges;
     var nodes = data.nodes;
-    console.log(edges);
-    console.log("Articulation points in first graph")
-    g1 = new Graph(nodes.length)
-    edges.forEach(element => {
-        g1.addEdge(element.from, element.to)
+    let l= nodes.length;
+    graph = new Array(l).fill(null).map(() => Array(l).fill(999));
+    graph2 = [
+        [0, 1, 10, 20],
+        [10, 0, 35, 1],
+        [1, 10, 0, 30],
+        [10, 25, 1, 0]]
 
-    })
-    console.log(g1.adj);
-    g1.AP()
+    for(var i=0;i<l;i++){
+        graph[i][i] = 0;
+        edges.forEach(element => {
+            graph[element.from][element.to] = element.weight;
+            graph[element.to][element.from] = element.weight;
+        });
+        
+    }
+    s = 0
+    var o = pvc(graph, s,l)
+    var tab = [];
+    var el = {};
+    console.log(o.nodes)
+    for(var i = 0 ;i<o.nodes.length;i++){
+        el.from = o.nodes[i];
+        if (i != o.nodes.length - 1){
+            el.to = o.nodes[i+1];
+            tab.push(el);
+        }else{
+            el.to=0;
+            tab.push(el);
+        }
+        el={}
+    }
+    el={}
+    el.from = 0
+    el.to = o.nodes[0];
+    tab.push(el);
+
+
+    edges.forEach(element => {
+
+        el={}
+        el.from = element.from
+        el.to = element.to
+        el2={}
+        el2.from = element.to
+        el2.to = element.from
+        if(containsObject(el,tab) || containsObject(el2,tab)){
+            edges.update({id:element.id,color :{color:'#ff383f'}})
+        } 
+    });
+
+    
+}
+
+function containsObject(obj, list) {
+    var i;
+    for (i = 0; i < list.length; i++) {
+        if (list[i].from == obj.from && list[i].to == obj.to) {
+            return true;
+        }
+    }
+
+    return false;
 }
