@@ -230,10 +230,21 @@ function tsp() {
         
     }
     s = 0
+    var t0 = performance.now();
     var o = pvc(graph, s,l)
+    var t1 = performance.now();
+    var o2 = test(graph,l)
+    var t2 = performance.now();
+
+
+    console.log("bruteFroce",o.min_path,"time",t1-t0)
+    
+    console.log("backtracking",o2,"time",t2-t1)
+
+
+
     var tab = [];
     var el = {};
-    console.log(o.nodes)
     for(var i = 0 ;i<o.nodes.length;i++){
         el.from = o.nodes[i];
         if (i != o.nodes.length - 1){
@@ -263,6 +274,7 @@ function tsp() {
             edges.update({id:element.id,color :{color:'#ff383f'}})
         } 
     });
+    
 
     
 }

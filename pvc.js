@@ -21,10 +21,7 @@ function pvc(graph, s,V) {
         current_pathweight += graph[k][s]
 
         oldMinPath=min_path;
-        min_path = Math.min(min_path,current_pathweight)
-
-        console.log(oldMinPath,"||||",min_path)
-        
+        min_path = Math.min(min_path,current_pathweight)        
 
         if(min_path<oldMinPath) {
             save1 = [...vertex];
@@ -85,8 +82,35 @@ function next_permutation(L) {
 
 }
 
-function test(V,graph) {
-    s = 0    
-    return pvc(graph, s,V)
+
+var answer = []
+function backtrackingPVC(graph, v, currPos, n, count, cost){
+    if(count == n && graph[currPos][0]>=0){
+        answer.push(cost + graph[currPos][0])
+        return 0
+    }
+
+    for (var i=0;i<n;i++){
+        if (v[i] == false && graph[currPos][i]>=0){
+            v[i] = true
+            backtrackingPVC(graph, v, i, n, count + 1,cost + graph[currPos][i])
+            v[i] = false
+        }
+    }
+}
+function test(graph1,n) {
+    answer =[]
+
+    graph = [
+        [0, 1, 10, 20],
+        [10, 0, 35, 1],
+        [1, 10, 0, 30],
+        [10, 25, 1, 0]]
+    
+    v=new Array(n).fill(false)
+    v[0]=true
+    backtrackingPVC(graph1, v, 0, n, 1, 0) 
+
+    return Math.min.apply(null,answer)
 }
 
