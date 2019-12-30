@@ -12,6 +12,24 @@
 </head>
 
 <body onload="draw();">
+    <div class="modal" tabindex="-1" role="dialog" id="modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Entrer le poids de l'arête</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                      <label for="poids">Poids de l'arête</label>
+                      <input type="number" id="poids" class="form-control" placeholder="Poids">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="confirm" type="button" class="btn btn-primary">Confirmer</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="network-popUp">
         <span id="operation">node</span>
         <br>
@@ -44,7 +62,8 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-md-4">
-                <button class="btn btn-block btn-lg btn-outline-light" onclick="tarjan();" id="articulation">Voir les points
+                <button class="btn btn-block btn-lg btn-outline-light" onclick="tarjan();" id="articulation">Voir les
+                    points
                     d'articulation</button>
             </div>
         </div>
@@ -61,257 +80,7 @@
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script src="script.js"></script>
+    <script src="network.js"></script>
 </body>
 
 </html>
-<script>
-    var network = null;
-    var nodes = new vis.DataSet([{
-        id: 0,
-        label: 'Node 0'
-    },
-    {
-        id: 1,
-        label: 'Node 1'
-    },
-    {
-        id: 2,
-        label: 'Node 2'
-    },
-    {
-        id: 3,
-        label: 'Node 3'
-    }
-    ]);
-
-    var edges = new vis.DataSet([{
-        from: 0,
-        to: 1
-    },
-    {
-        from: 1,
-        to: 2
-    },
-    {
-        from: 2,
-        to: 3
-    },
-    {
-        from: 3,
-        to: 0
-    },
-    {
-        from: 3,
-        to: 1
-    }
-    ]);
-
-    // create a network
-    var data = {
-        nodes: nodes,
-        edges: edges
-    };
-
-
-    function destroy() {
-        if (network !== null) {
-            network.destroy();
-            network = null;
-        }
-    }
-
-    function draw() {
-        destroy();
-        nodes = [];
-        edges = [];
-
-        // create a network
-        var container = document.getElementById('mynetwork');
-        var options = {
-            manipulation: {
-                addNode: function (data, callback) {
-                    // filling in the popup DOM elements
-                    document.getElementById('operation').innerHTML = "Add Node";
-                    document.getElementById('node-id').value = data.id;
-                    document.getElementById('node-label').value = data.label;
-                    document.getElementById('saveButton').onclick = saveData.bind(this, data, callback);
-                    document.getElementById('cancelButton').onclick = clearPopUp.bind();
-                    document.getElementById('network-popUp').style.display = 'block';
-                },
-                editNode: function (data, callback) {
-                    // filling in the popup DOM elements
-                    document.getElementById('operation').innerHTML = "Edit Node";
-                    document.getElementById('node-id').value = data.id;
-                    document.getElementById('node-label').value = data.label;
-                    document.getElementById('saveButton').onclick = saveData.bind(this, data, callback);
-                    document.getElementById('cancelButton').onclick = cancelEdit.bind(this, callback);
-                    document.getElementById('network-popUp').style.display = 'block';
-                },
-                addEdge: function (data, callback) {
-                    if (data.from == data.to) {
-                        var r = confirm("Do you want to connect the node to itself?");
-                        if (r == true) {
-                            callback(data);
-                        }
-                    } else {
-                        callback(data);
-                    }
-                },
-
-            },
-            configure: {
-                filter: function (option, path) {
-                    if (path.indexOf('physics') !== -1) {
-                        return true;
-                    }
-                    if (path.indexOf('smooth') !== -1 || option === 'smooth') {
-                        return true;
-                    }
-                    return false;
-                },
-                container: document.getElementById('config')
-            },
-            interaction: {
-
-            },
-            // "edges": {
-            //     "smooth": {
-            //         "forceDirection": "none"
-            //     }
-            // },
-            // "physics": {
-            //     "barnesHut": {
-            //         "centralGravity": 0,
-            //         "springLength": 300,
-            //         "springConstant": 0.005,
-            //         "damping": 1
-            //     },
-            //     "maxVelocity": 21
-            // }
-
-        };
-        network = new vis.Network(container, data, options);
-    }
-
-    function clearPopUp() {
-        document.getElementById('saveButton').onclick = null;
-        document.getElementById('cancelButton').onclick = null;
-        document.getElementById('network-popUp').style.display = 'none';
-    }
-
-    function cancelEdit(callback) {
-        clearPopUp();
-        callback(null);
-    }
-
-    function saveData(data, callback) {
-        data.id = document.getElementById('node-id').value;
-        data.label = document.getElementById('node-label').value;
-        clearPopUp();
-        callback(data);
-    }
-
-    // document.getElementById("articulation").addEventListener("click", tarjan);
-
-    class Graph {
-        constructor(vertices) {
-            this.time = 0;
-            this.v = vertices;
-            this.adj = new Array(this.v).fill(null).map(() => []);
-        }
-        addEdge(v, w) {
-            this.adj[v].push(w)
-            this.adj[w].push(v)
-        }
-        APUtil(u, visited, disc, low, parent, ap) {
-            var children = 0;
-            visited[u] = true;
-
-            disc[u] = this.time;
-            low[u] = this.time;
-            this.time += 1;
-            // disc[u] = low[u] = ++this.time; 
-
-            var tab = this.adj[u]
-            for (var i = 0; i < tab.length; i++) {
-                var v = tab[i];
-                if (!visited[v]) {
-                    children++;
-                    parent[v] = u;
-                    this.APUtil(v, visited, disc, low, parent, ap);
-
-
-                    low[u] = Math.min(low[u], low[v]);
-
-
-                    if ((parent[u] == -1) && (children > 1)) {
-                        ap[u] = true;
-                    }
-
-
-
-                    if ((parent[u] != -1) && (low[v] >= disc[u])) {
-                        ap[u] = true;
-                    }
-
-
-
-                }
-                else if (v != parent[u]) {
-                    low[u] = Math.min(low[u], disc[v]);
-
-                }
-            }
-        }
-        AP() {
-
-            let visited = Array(this.v).fill(null).map(() => false)
-            let disc = Array(this.v).fill(null).map(() => 0)
-            let low = Array(this.v).fill(null).map(() => 0)
-            let parent = Array(this.v).fill(null).map(() => -1)
-            let ap = Array(this.v).fill(null).map(() => false)
-
-            for (var i = 0; i < this.v; i++) {
-                if (visited[i] == false)
-                    this.APUtil(i, visited, disc, low, parent, ap);
-            }
-
-
-            for (var j = 0; j < this.v; j++) {
-                data.nodes.update({ id: j, color: { background: '#349feb' } })
-
-                if (ap[j] == true) {
-                    data.nodes.update({ id: j, color: { background: '#eb4034' } })
-                }
-
-            }
-
-
-        }
-    }
-
-    function tarjan() {
-        var edges = data.edges;
-        var nodes = data.nodes;
-
-        // let i = 0;
-        // nodes.forEach(function(node,index){
-        //     console.log(nodes.index)
-        //     edges.forEach(edge=>{
-        //         if(edge.to == index) edge.to = i;
-        //         if(edge.from == index) edge.from = i;
-        //     })
-
-        //     i++;
-        // });
-
-        console.log("Articulation points in first graph")
-        g1 = new Graph(nodes.length)
-        edges.forEach(element => {
-            g1.addEdge(element.from, element.to)
-
-        })
-        console.log(g1.adj);
-        g1.AP()
-    }
-</script>
