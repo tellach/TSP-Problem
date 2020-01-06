@@ -149,6 +149,8 @@ function tsp() {
         });
         
     }
+    var list = []
+    for(var j=0;j<l;j++)list[j]=j
     s = 0
 
     var t0 = performance.now();
@@ -159,6 +161,8 @@ function tsp() {
 
     console.log("bruteFroce",o.min_path,"time",t1-t0)
     console.log("backtracking",o2,"time",t2-t1)
+    nearestNeighbourAlgo(graph,list)
+    
 
     var tab = [];
     var el = {};

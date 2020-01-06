@@ -112,4 +112,32 @@ function pvcBackTracking(graph1,n) {
     backtrackingPVC(graph1, v, 0, n, 1, 0) 
     return Math.min.apply(null,answer)
 }
+function nearestNeighbourAlgo(graph,list){
+    var visited = []
+    visited.push(0)
+    var result = 0
+    index=0
+    var oldIndex = 0
+    var filteredlist=[]
+    var value = 0
+    while(true){
+        filteredlist=list.filter(item => item !== index)
+        list=[...filteredlist]
+        oldIndex = index
+        value=graph[index][list[0]]
+        for (var i = 1; i < graph[oldIndex].length; i++) { 
+            if (graph[oldIndex][i] <= value && !visited.includes(i) && i!=index) {
+                value = graph[oldIndex][i];
+                index = i;
+            }       
+        }
+        if (oldIndex==index) break;
+        visited.push(index)
+        result+=value
+    }
+    result+=graph[index][0]
+    console.log(visited)
+    console.log('nearestNeighbourAlgo',result)
+
+}
 
