@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Points d'articulation</title>
+    <title>Problème du voyageur de commerce</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-network.min.css" rel="stylesheet"
         type="text/css" />
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet"
@@ -53,21 +53,37 @@
     <div id="particles-js"></div>
     <div class="container">
         <div class="row justify-content-center pt-4">
-            <h1>TP des points d'articulation</h2>
+            <h1>Problème du voyageur de commerce</h1>
         </div>
         <div class="row justify-content-center mb-3 mt-2">
-            <div class="col-md-10">
-                <div id="mynetwork"></div>
+            <div class="col-md-8">
+                <div class="row mb-2">
+                    <div class="col-md-12" id="mynetwork"></div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <button class="btn btn-block btn-lg btn-outline-light" onclick="tsp();" id="articulation">
+                            Trouver le meilleurs chemins
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="row justify-content-center">
             <div class="col-md-4">
-
-                <button class="btn btn-block btn-lg btn-outline-light" onclick="tsp();" id="articulation">Voir les
-                    points
-                </button>
+                <div class="card text-black bg-light mb-3" style="max-width: 18rem;">
+                    <div class="card-header">Résultats:</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Méthode exhaustive:</h5>
+                        <p class="card-text">Cout minimal: <b id="exhaustive"></b></p>
+                        <p class="card-text">Temps: <b id="exhaustive-time"></b></p>
+                        <hr/>
+                        <h5 class="card-title">Méthode Vorace:</h5>
+                        <p class="card-text">Cout minimal: <b id="vorace"></b></p>
+                        <p class="card-text">Temps: <b id="vorace-time"></b></p>
+                    </div>
+                </div>
             </div>
         </div>
+
     </div>
 
     <div id="config" style="display: none;"></div>
@@ -83,4 +99,5 @@
     <script src="script.js"></script>
     <script src="network.js"></script>
     <script src="./pvc.js"></script>
+    <script src="./ui.js"></script>
 </body>

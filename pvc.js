@@ -98,8 +98,7 @@ function backtrackingPVC(graph, v, currPos, n, count, cost){
         }
     }
 }
-function test(graph1,n) {
-    answer =[]
+function pvcBackTracking(graph1,n) {
 
     graph = [
         [0, 1, 10, 20],
@@ -109,8 +108,8 @@ function test(graph1,n) {
     
     v=new Array(n).fill(false)
     v[0]=true
+    answer = []
     backtrackingPVC(graph1, v, 0, n, 1, 0) 
-
     return Math.min.apply(null,answer)
 }
 

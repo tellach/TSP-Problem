@@ -60,6 +60,9 @@ function draw() {
     // create a network
     var container = document.getElementById('mynetwork');
     var options = {
+        physics: {
+            enabled: false
+        },
         manipulation: {
             addNode: function (data, callback) {
                 // filling in the popup DOM elements
@@ -132,95 +135,12 @@ function saveData(data, callback) {
     callback(data);
 }
 
-// document.getElementById("articulation").addEventListener("click", tarjan);
-
-class Graph {
-    constructor(vertices) {
-        this.time = 0;
-        this.v = vertices;
-        this.adj = new Array(this.v).fill(null).map(() => []);
-    }
-    addEdge(v, w) {
-        this.adj[v].push(w)
-        this.adj[w].push(v)
-    }
-    APUtil(u, visited, disc, low, parent, ap) {
-        var children = 0;
-        visited[u] = true;
-
-        disc[u] = this.time;
-        low[u] = this.time;
-        this.time += 1;
-        // disc[u] = low[u] = ++this.time; 
-
-        var tab = this.adj[u]
-        for (var i = 0; i < tab.length; i++) {
-            var v = tab[i];
-            if (!visited[v]) {
-                children++;
-                parent[v] = u;
-                this.APUtil(v, visited, disc, low, parent, ap);
-
-
-                low[u] = Math.min(low[u], low[v]);
-
-
-                if ((parent[u] == -1) && (children > 1)) {
-                    ap[u] = true;
-                }
-
-
-
-                if ((parent[u] != -1) && (low[v] >= disc[u])) {
-                    ap[u] = true;
-                }
-
-
-
-            }
-            else if (v != parent[u]) {
-                low[u] = Math.min(low[u], disc[v]);
-
-            }
-        }
-    }
-    AP() {
-
-        let visited = Array(this.v).fill(null).map(() => false)
-        let disc = Array(this.v).fill(null).map(() => 0)
-        let low = Array(this.v).fill(null).map(() => 0)
-        let parent = Array(this.v).fill(null).map(() => -1)
-        let ap = Array(this.v).fill(null).map(() => false)
-
-        for (var i = 0; i < this.v; i++) {
-            if (visited[i] == false)
-                this.APUtil(i, visited, disc, low, parent, ap);
-        }
-
-        for (var j = 0; j < this.v; j++) {
-            data.nodes.update({ id: j, color: { background: '#349feb' } })
-
-            if (ap[j] == true) {
-                data.nodes.update({ id: j, color: { background: '#eb4034' } })
-            }
-
-        }
-
-
-    }
-}
-
 function tsp() {
     var edges = data.edges;
     var nodes = data.nodes;
     let l= nodes.length;
-    graph = new Array(l).fill(null).map(() => Array(l).fill(999));
-    graph2 = [
-        [0, 1, 10, 20],
-        [10, 0, 35, 1],
-        [1, 10, 0, 30],
-        [10, 25, 1, 0]]
-
+    var graph = new Array(l).fill(null).map(() => Array(l).fill(999));
+    
     for(var i=0;i<l;i++){
         graph[i][i] = 0;
         edges.forEach(element => {
@@ -230,18 +150,15 @@ function tsp() {
         
     }
     s = 0
+
     var t0 = performance.now();
     var o = pvc(graph, s,l)
     var t1 = performance.now();
-    var o2 = test(graph,l)
+    var o2 = pvcBackTracking(graph,l)
     var t2 = performance.now();
 
-
     console.log("bruteFroce",o.min_path,"time",t1-t0)
-    
     console.log("backtracking",o2,"time",t2-t1)
-
-
 
     var tab = [];
     var el = {};
@@ -272,11 +189,20 @@ function tsp() {
         el2.to = element.from
         if(containsObject(el,tab) || containsObject(el2,tab)){
             edges.update({id:element.id,color :{color:'#ff383f'}})
-        } 
-    });
-    
+        }else{
+            edges.update({id:element.id,color :{color: '#5F8EC8'}})
+        }
+    });   
 
-    
+    document.getElementById("exhaustive-time").innerHTML = (t1-t0).toFixed(5)+' ms';
+    document.getElementById("exhaustive").innerHTML = o.min_path;
+    document.getElementById("vorace-time").innerHTML = (t2-t1).toFixed(5)+' ms';
+    document.getElementById("vorace").innerHTML = o2;
+    // $('#exhaustive-time').text(t1-t0+' ms')
+    // $('#exhaustive').text(o.min_path)
+    // $('#vorace-time').text(t2-t1+' ms')
+    // $('#vorace').text(o2)
+    console.log($('#exhaustive-time').text());
 }
 
 function containsObject(obj, list) {
