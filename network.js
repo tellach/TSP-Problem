@@ -158,10 +158,12 @@ function tsp() {
     var t1 = performance.now();
     var o2 = pvcBackTracking(graph,l)
     var t2 = performance.now();
-
+    var o3 = nearestNeighbourAlgo(graph,list)
+    var t3 = performance.now();
     console.log("bruteFroce",o.min_path,"time",t1-t0)
     console.log("backtracking",o2,"time",t2-t1)
-    nearestNeighbourAlgo(graph,list)
+    console.log("Nearest neighbour",o3,"time",t3-t2)
+    
     
 
     var tab = [];
@@ -202,6 +204,8 @@ function tsp() {
     document.getElementById("exhaustive").innerHTML = o.min_path;
     document.getElementById("vorace-time").innerHTML = (t2-t1).toFixed(5)+' ms';
     document.getElementById("vorace").innerHTML = o2;
+    document.getElementById("nn-time").innerHTML = (t3-t2).toFixed(5)+' ms';
+    document.getElementById("nn").innerHTML = o3;
     // $('#exhaustive-time').text(t1-t0+' ms')
     // $('#exhaustive').text(o.min_path)
     // $('#vorace-time').text(t2-t1+' ms')

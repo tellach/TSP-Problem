@@ -136,8 +136,8 @@ function nearestNeighbourAlgo(graph,list){
         result+=value
     }
     result+=graph[index][0]
-    console.log(visited)
+    // console.log(visited)
     console.log('nearestNeighbourAlgo',result)
-
+    return result;
 }
 

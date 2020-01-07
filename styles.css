@@ -1,5 +1,5 @@
 body{
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Josefin Sans', sans-serif;
 }
 
 #mynetwork {
@@ -42,6 +42,10 @@ h1{
     position: absolute;
     width: 100%;
     height: 100%;
-    background: #00356B;
+    background: #000000;
     z-index: -10;
+  }
+
+  small{
+    font-size: 40% !important;
   }
